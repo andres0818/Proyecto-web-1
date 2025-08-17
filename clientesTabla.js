@@ -2,12 +2,11 @@ const form = document.getElementById('registrarse');
 
 actualizarTabla()
 
-export function actualizarTabla() {
-    const clientes = JSON.parse(localStorage.getItem("clientes")) || [];
+export function actualizarTabla($clientes = (JSON.parse(localStorage.getItem("clientes")) || [])) {
 
     const tbody = document.querySelector("#tablaClientes tbody");
     tbody.innerHTML = "";
-    clientes.forEach(c => {
+    $clientes.forEach(c => {
         const fila = `<tr>
             <td>${c.nombre}</td>
             <td>${c.contacto}</td>
@@ -19,7 +18,7 @@ export function actualizarTabla() {
             <td>${c.etiquetas}</td>
             <td>
                 <button onclick="editarCliente('${c.correo}')">✏️</button>
-                <button onclick="eliminarCliente('${c.correo}')">🗑️</button>
+                <button onclick="eliminarCliente('${c.correo}')">❌</button>
             </td>
         </tr>`;
         tbody.innerHTML += fila;
@@ -61,6 +60,5 @@ function eliminarCliente(correo) {
     actualizarTabla();
 }
 
-// Exponer funciones globales (para que funcionen los botones)
 window.editarCliente = editarCliente;
 window.eliminarCliente = eliminarCliente;

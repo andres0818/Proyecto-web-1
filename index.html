@@ -53,6 +53,16 @@
     </div>
 
     <div>
+        <div style="margin: 20px 0;">
+            <input type="text" name="buscador" id="buscador" placeholder="Buscar por Nombre, Correo o Ciudad">
+
+            <select id="filtroEstado">
+                <option value="">-- Filtrar por Estado --</option>
+                <option value="prospecto">Prospecto</option>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+            </select>
+        </div>
 
         <table id="tablaClientes">
             <thead>
@@ -76,6 +86,7 @@
     <script src="validaciones.js"></script>
     <script type="module" src="clientesTabla.js"></script>
     <script type="module" src="guardarFormulario.js"></script>
+    <script type="module" src="filtrosBuscador.js"></script>
 </body>
 
 </html>

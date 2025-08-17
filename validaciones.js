@@ -13,8 +13,8 @@ document.querySelectorAll("input").forEach(e => {
     e.addEventListener("input", (i) => {
         let dataInput = i.target;
         let name = dataInput.name;
-        
-        validationName(dataInput, regex[name]); 
+        if(name !="buscador" )
+            validationName(dataInput, regex[name]); 
 
     });
 });

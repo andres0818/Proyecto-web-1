@@ -1,4 +1,4 @@
-import { agregarCliente } from "./clientesTabla.js";
+import { actualizarTabla, actualizarCliente} from "./clientesTabla.js";
 
 document.getElementById('fecha').value = new Date().toISOString().slice(0, 10);
 const form = document.getElementById('registrarse');
@@ -7,7 +7,7 @@ form.addEventListener('submit', function (event) {
     event.preventDefault();
 
     const inputs = document.querySelectorAll("input")
-
+    const clientes = JSON.parse(localStorage.getItem("clientes")) || [];
     const datos = {
         nombre: form.nombre.value.trim(),
         contacto: form.contacto.value.trim(),
@@ -19,18 +19,26 @@ form.addEventListener('submit', function (event) {
         etiquetas: form.etiquetas.value.trim()
     };
 
-    const clientes = JSON.parse(localStorage.getItem("clientes")) || [];
+    if (form.dataset.editando === "true") {
+        actualizarCliente(datos, clientes);
+        actualizarTabla()
+        reiniciarFormulario();
+        form.dataset.editando = "false"; // limpiar estado
+        return;
+    } else {
 
-    let $validarCorreo = validarCorreo(datos.correo, clientes);
-    let $validarFormulario = validarEstadoFormulario(inputs);
-    
-    if ($validarFormulario.validado, !$validarCorreo) {
+        const $validarCorreo = validarCorreo(datos.correo, clientes);
+        const $validarFormulario = validarEstadoFormulario(inputs);
+
+        if ($validarFormulario.validado, !$validarCorreo) {
         guardarFormulario(datos, clientes);
-        agregarCliente(clientes);
+        actualizarTabla();
         reiniciarFormulario();
     } else {
         alert($validarFormulario.mensaje);
     }
+    }
+
 });
 
 function reiniciarFormulario (){
@@ -74,7 +82,7 @@ function validarCorreo($correo, $clientes) {
 
     if (correoExiste){
 
-        let correo = document.getElementById("correo"); 
+        const correo = document.getElementById("correo"); 
         correo.style.border = "2px solid red";
         correo.setAttribute('isValid', '0');
 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        label {
+            margin-bottom: -5px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div style="display: flex; justify-content:  center; align-items: center; width: 100dvw; height: 100dvh;">
+        <form id="registrarse">
+            <fieldset style="display: inline-grid; gap: 7px; ">
+                <legend style="margin-bottom: 5px;">Registrarse</legend>
+                <label for="nombre">Nombre/Empresa</label>
+                <input type="text" name="nombre" id="nombre" title="texto humano, sin caracteres repetidos abusivos."
+                    required>
+                <label for="contacto">Contacto Principal</label>
+                <input type="text" name="contacto" id="contacto" title="nombre y apellido, permite acentos." required>
+                <label for="correo">Correo</label>
+                <input type="text" name="correo" id="correo" title="Formato estandar" required>
+                <label for="telefono">Teléfono</label>
+                <input type="text" name="telefono" id="telefono" title="(numérico nacional, opcional “+” al inicio)."
+                    required>
+                <label for="ciudad">Ciudad</label>
+                <input type="text" name="ciudad" id="ciudad" title="(texto; no números puros)." required>
+                <label for="estado">Estado</label>
+                <select type="text" name="estado" id="estado" required>
+                    <option value="prospecto">Prospecto</option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">inactivo</option>
+                </select>
+                <label for="fecha">Fecha de creación</label>
+                <input type="text" name="fecha" id="fecha" title="(autogenerada, no editable por el usuario)." readonly
+                    required>
+                <label for="etiquetas">Etiquetas</label>
+                <input type="text" name="etiquetas" id="etiquetas"
+                    title="(lista separada por comas; cada tag alfanumérica con guiones medios opcionales)." required>
+                <div style="margin-top: 20px; text-align: right;">
+                    <button type="reset">Limpiar</button>
+                    <button type="submit">Enviar</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <div>
+
+        <table id="tablaClientes">
+            <thead>
+                <tr>
+                    <th>Nombre/Empresa</th>
+                    <th>Contacto Principal</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Ciudad</th>
+                    <th>Estado</th>
+                    <th>Fecha de creación</th>
+                    <th>Etiquetas</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+
+    <script src="validaciones.js"></script>
+    <script type="module" src="clientesTabla.js"></script>
+    <script type="module" src="guardarFormulario.js"></script>
+</body>
+
+</html>

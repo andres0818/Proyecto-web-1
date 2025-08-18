@@ -35,12 +35,16 @@ form.addEventListener('submit', function (event) {
         const $validarCorreo = validarCorreo(datos.correo, clientes);
         const $validarFormulario = validarEstadoFormulario(inputs);
 
-        if ($validarFormulario.validado && !$validarCorreo) {
+        if ($validarFormulario.validado && !$validarCorreo.estado) {
             guardarFormulario(datos, clientes);
             actualizarTabla();
             reiniciarFormulario();
         } else {
-            mostrarPopup($validarFormulario.mensaje);
+            if($validarCorreo.estado) {
+                mostrarPopup(`${$validarCorreo.mensaje} y ${$validarFormulario.mensaje}`);
+            }else{
+                mostrarPopup($validarCorreo.mensaje);
+            }
         }
     }
 
@@ -100,8 +104,11 @@ function validarCorreo($correo, $clientes) {
         correo.style.border = "2px solid red";
         correo.setAttribute('isValid', '0');
 
-        alert("Este correo ya está registrado.");;
-        return true;
+        mostrarPopup("Este correo ya está registrado.");
+        return {
+            estado: true, 
+            mensaje: "Este correo ya está registrado."
+        };
     }
 return false;
 }

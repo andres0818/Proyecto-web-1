@@ -26,9 +26,40 @@ function validationName($element, $regex) {
     if (!$regex.test(value)) {
         $element.style.border = "2px solid red";
         $element.setAttribute('isValid', '0');
-
+        mostrarError($element, `El campo ${$element.name} no cumple con el formato.`);
     } else {
         $element.style.border = "2px solid green";
         $element.setAttribute('isValid', '1');
+        limpiarError($element);
     }
+}
+
+function mostrarError(campo, mensaje) {
+    let error = campo.nextElementSibling;
+    if (!error || !error.classList.contains("error-msg")) {
+        error = document.createElement("div");
+        error.className = "error-msg";
+        error.style.color = "red";
+        campo.insertAdjacentElement("afterend", error);
+    }
+    error.textContent = mensaje;
+}
+
+function limpiarError(campo) {
+    const error = campo.nextElementSibling;
+    if (error && error.classList.contains("error-msg")) {
+        error.textContent = "";
+    }
+}
+
+function mostrarAviso(msg) {
+    let aviso = document.getElementById("aviso-global");
+    if (!aviso) {
+        aviso = document.createElement("div");
+        aviso.id = "aviso-global";
+        aviso.style.color = "red";
+        aviso.style.margin = "10px 0";
+        document.body.prepend(aviso);
+    }
+    aviso.textContent = msg;
 }

@@ -1,8 +1,17 @@
 const form = document.getElementById('registrarse');
-
+const STORAGE_KEY = 'crm:clientes';
 actualizarTabla()
 
-export function actualizarTabla($clientes = (JSON.parse(localStorage.getItem("clientes")) || [])) {
+export function setClientes(arr) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
+
+export function getClientes() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+}
+
+
+export function actualizarTabla($clientes = getClientes()) {
 
     const tbody = document.querySelector("#tablaClientes tbody");
     tbody.innerHTML = "";
@@ -29,12 +38,12 @@ export function actualizarCliente(datos, $clientes) {
     const index = $clientes.findIndex(c => c.correo === datos.correo);
     if (index !== -1) {
         $clientes[index] = datos;
-        localStorage.setItem("clientes", JSON.stringify($clientes));    
+        setClientes($clientes);
     }
 }
 
 function editarCliente(correo) {
-    const clientes = JSON.parse(localStorage.getItem("clientes")) || [];
+    const clientes = getClientes();
     const cliente = clientes.find(c => c.correo === correo);
 
     if (!cliente) return alert("Cliente no encontrado.");
@@ -54,11 +63,30 @@ function editarCliente(correo) {
 }
 
 function eliminarCliente(correo) {
-    let clientes = JSON.parse(localStorage.getItem("clientes")) || [];
-    clientes = clientes.filter(c => c.correo !== correo);
-    localStorage.setItem("clientes", JSON.stringify(clientes));
-    actualizarTabla();
+    const tbody = document.querySelector("#tablaClientes tbody");
+    const fila = [...tbody.rows].find(r => r.cells[2].textContent === correo);
+
+    if (fila) {
+        const confirmCell = fila.insertCell(-1);
+        confirmCell.colSpan = 2;
+        confirmCell.innerHTML = `
+            <span>¿Eliminar?</span>
+            <button onclick="confirmarEliminacion('${correo}', true)">Sí</button>
+            <button onclick="confirmarEliminacion('${correo}', false)">No</button>
+        `;
+    }
 }
 
+function confirmarEliminacion(correo, confirmar) {
+    if (confirmar) {
+        let clientes = getClientes() || [];
+        clientes = clientes.filter(c => c.correo !== correo);
+       setClientes(clientes);
+        actualizarTabla(clientes);
+    } else {
+        actualizarTabla(); 
+    }
+}
+window.confirmarEliminacion = confirmarEliminacion;
 window.editarCliente = editarCliente;
 window.eliminarCliente = eliminarCliente;

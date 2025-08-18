@@ -1,13 +1,18 @@
-import { actualizarTabla, actualizarCliente} from "./clientesTabla.js";
+import { setClientes, getClientes, actualizarTabla, actualizarCliente} from "./clientesTabla.js";
+import { mostrarPopup } from "./popup.js";
 
 document.getElementById('fecha').value = new Date().toISOString().slice(0, 10);
 const form = document.getElementById('registrarse');
+
+if (!localStorage.getItem("crm:schemaVersion")) {
+    localStorage.setItem("crm:schemaVersion", "v1");
+}
 
 form.addEventListener('submit', function (event) {
     event.preventDefault();
 
     const inputs = document.querySelectorAll("input")
-    const clientes = JSON.parse(localStorage.getItem("clientes")) || [];
+    const clientes = getClientes();
     const datos = {
         nombre: form.nombre.value.trim(),
         contacto: form.contacto.value.trim(),
@@ -16,7 +21,7 @@ form.addEventListener('submit', function (event) {
         ciudad: form.ciudad.value.trim(),
         estado: form.estado.value,
         fecha: form.fecha.value,
-        etiquetas: form.etiquetas.value.trim()
+        etiquetas: procesarEtiquetas(form.etiquetas.value)
     };
 
     if (form.dataset.editando === "true") {
@@ -30,16 +35,25 @@ form.addEventListener('submit', function (event) {
         const $validarCorreo = validarCorreo(datos.correo, clientes);
         const $validarFormulario = validarEstadoFormulario(inputs);
 
-        if ($validarFormulario.validado, !$validarCorreo) {
-        guardarFormulario(datos, clientes);
-        actualizarTabla();
-        reiniciarFormulario();
-    } else {
-        alert($validarFormulario.mensaje);
-    }
+        if ($validarFormulario.validado && !$validarCorreo) {
+            guardarFormulario(datos, clientes);
+            actualizarTabla();
+            reiniciarFormulario();
+        } else {
+            mostrarPopup($validarFormulario.mensaje);
+        }
     }
 
 });
+
+function procesarEtiquetas(str) {
+    return [...new Set(
+        str.split(",")
+           .map(e => e.trim().toLowerCase())
+           .filter(e => e.length >= 2 && e.length <= 24)
+    )].join(", ");
+}
+
 
 function reiniciarFormulario (){
     form.reset()
@@ -71,7 +85,7 @@ function validarEstadoFormulario($inputs, $formularioValido = true ) {
 
 function guardarFormulario(datos, $clientes) {
     $clientes.push(datos);
-    localStorage.setItem("clientes", JSON.stringify($clientes));
+    setClientes($clientes);
 }
 
 function validarCorreo($correo, $clientes) {

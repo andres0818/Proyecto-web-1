@@ -10,6 +10,48 @@
         label {
             margin-bottom: -5px;
         }
+
+        .popup {
+            display: none;
+            /* oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* fondo oscuro */
+        }
+
+        .popup__content {
+            background: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            width: 300px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: popupFade .3s ease-in-out;
+        }
+
+        .popup__close {
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        @keyframes popupFade {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 
 </head>
@@ -83,10 +125,19 @@
     </div>
 
 
+    <div id="popupError" class="popup">
+        <div class="popup__content">
+            <span id="popupClose" class="popup__close">&times;</span>
+            <p id="popupMessage"></p>
+        </div>
+    </div>
+
+
     <script src="validaciones.js"></script>
     <script type="module" src="clientesTabla.js"></script>
     <script type="module" src="guardarFormulario.js"></script>
     <script type="module" src="filtrosBuscador.js"></script>
+    <script type="module" src="popup.js"></script>
 </body>
 
 </html>

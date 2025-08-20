@@ -1,8 +1,5 @@
-import { actualizarTabla } from "./clientesTabla.js";
-
-function obtenerClientes() {
-    return JSON.parse(localStorage.getItem("clientes")) || [];
-}
+import { actualizarTabla, getClientes, setClientes } from "./clientesTabla.js";
+import { mostrarPopup } from "./popup.js";
 
 function buscarClientes(texto, clientes) {
     if (!texto) return clientes;
@@ -21,7 +18,7 @@ function filtrarPorEstado(estado, clientes) {
 }
 
 function aplicarFiltros() {
-    let clientes = obtenerClientes();
+    let clientes = getClientes();
 
     const texto = document.getElementById("buscador").value;
     const estado = document.getElementById("filtroEstado").value;
@@ -34,10 +31,11 @@ function aplicarFiltros() {
 
 document.getElementById("buscador").addEventListener("input", aplicarFiltros);
 document.getElementById("filtroEstado").addEventListener("change", aplicarFiltros);
-
+document.getElementById("exportarClientes").addEventListener("click", exportarClientes);
+document.getElementById("cargarArchivo").addEventListener("click", cargarArchivo);
 
 function exportarClientes() {
-    const clientes = obtenerClientes();
+    const clientes = getClientes();
     const json = JSON.stringify(clientes, null, 2);
 
     const textarea = document.createElement("textarea");
@@ -63,9 +61,25 @@ function importarClientes(json) {
             correos.add(correo);
         }
 
-        localStorage.setItem("crm:clientes", JSON.stringify(datos));
+        setClientes(datos);
         actualizarTabla();
     } catch (e) {
-        mostrarAviso("Error al importar: " + e.message);
+        mostrarPopup("Error al importar: " + e.message);
     }
+}
+
+function cargarArchivo() {
+    const input = document.getElementById("archivoImportar");
+    const file = input.files[0];
+
+    if (!file) {
+        mostrarPopup("Debes seleccionar un archivo JSON primero.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        importarClientes(e.target.result);
+    };
+    reader.readAsText(file);
 }

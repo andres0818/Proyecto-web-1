@@ -74,7 +74,7 @@ function validarEstadoFormulario($inputs, $formularioValido = true ) {
     let mensaje = "Los campos "
 
     $inputs.forEach(($element) => {
-        if (!parseInt($element.getAttribute("isValid")) && $element.name != "fecha" && $element.name != "buscador") {
+        if (!parseInt($element.getAttribute("isValid")) && $element.name != "fecha" && $element.name != "buscador" && $element.name != "archivoImportar") {
             mensaje += `${$element.name}, ` ;
             $formularioValido = false;
         }
